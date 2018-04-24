@@ -1,9 +1,9 @@
 from pyspark import SparkConf, SparkContext
+from src.handler import handle
+from src.log import logger
 
 conf = SparkConf().setMaster("local").setAppName("Test")
-sc = SparkContext(conf=conf)
 
-lines = sc.textFile('/data/file.csv')
-filtered = lines.filter(lambda line: "Technical/Other bounce" in line)
-
-print "All: {}, Filterd: {}".format(lines.count(), filtered.count())
+with SparkContext(conf=conf) as sc:
+    logger.info("Invoking handler.")
+    handle(sc)
