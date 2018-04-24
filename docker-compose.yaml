@@ -1,0 +1,8 @@
+version: "2.1"
+services:
+  spark:
+    build:
+      dockerfile: Dockerfile
+      context: .
+    volumes:
+      - ./data:/data
