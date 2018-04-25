@@ -20,7 +20,7 @@ RUN rm /usr/spark/spark.tgz
 WORKDIR /usr/src/app/
 
 RUN pip install --upgrade pip
-RUN pip install ipython
+RUN pip install ipython requests
 
 ENV IPYTHON=1
 
