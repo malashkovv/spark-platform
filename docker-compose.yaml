@@ -12,6 +12,10 @@ services:
   driver:
     extends:
       service: spark
+  shell:
+    extends:
+      service: spark
+    command: shell
   master:
     extends:
       service: spark

@@ -2,8 +2,6 @@
 
 set -e
 
-PYTHONPATH=$PYTHONPATH:$SPARK_HOME/python/:$SPARK_HOME/python/lib/$(ls $SPARK_HOME/python/lib/ | grep py4j)
-
 : ${SPARK_WORKER_PORT:="7078"}
 
 : ${SPARK_MASTER_PORT:="7077"}
