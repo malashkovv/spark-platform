@@ -4,5 +4,42 @@ services:
     build:
       dockerfile: Dockerfile
       context: .
+      args:
+        - SPARK_VERSION=2.3.0
+        - HADOOP_VERSION=2.7
     volumes:
       - ./data:/data
+  driver:
+    extends:
+      service: spark
+  master:
+    extends:
+      service: spark
+    command: master
+    ports:
+      - 8080:8080
+      - 7077:7077
+  worker_hawk:
+    extends:
+      service: spark
+    depends_on:
+      - master
+    command: worker
+    environment:
+      - SPARK_WORKER_WEBUI_PORT=8081
+      - SPARK_WORKER_PORT=7078
+    ports:
+      - 8081:8081
+      - 7078:7078
+  worker_bear:
+    extends:
+      service: spark
+    depends_on:
+      - master
+    command: worker
+    environment:
+      - SPARK_WORKER_WEBUI_PORT=8082
+      - SPARK_WORKER_PORT=7079
+    ports:
+      - 8082:8082
+      - 7079:7079

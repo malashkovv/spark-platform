@@ -20,14 +20,17 @@ RUN rm /usr/spark/spark.tgz
 WORKDIR /usr/src/app/
 
 RUN pip install --upgrade pip
-RUN pip install ipython
+RUN pip install ipython nltk
 
-ENV IPYTHON=1
+RUN python -m nltk.downloader -d /usr/lib/nltk_data punkt
 
 ENV PYTHONPATH="/usr/src/app/"
 
+ENV SPARK_VERSION=$SPARK_VERSION
 COPY . .
 
 COPY entrypoint.sh /entrypoint.sh
+
+EXPOSE 8080 8081 7077 7078
 
 ENTRYPOINT ["/entrypoint.sh"]
