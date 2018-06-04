@@ -25,6 +25,7 @@ RUN pip install --upgrade pip
 RUN pip install ipython nltk jupyter py4j pyspark==$SPARK_VERSION
 
 RUN python -m nltk.downloader -d /usr/lib/nltk_data punkt
+RUN python -m nltk.downloader -d /usr/lib/nltk_data stopwords
 
 ENV PYTHONPATH="/usr/src/app/"
 

@@ -12,6 +12,10 @@ services:
   driver:
     extends:
       service: spark
+    depends_on:
+      - master
+      - worker_bear
+      - worker_hawk
   shell:
     extends:
       service: spark

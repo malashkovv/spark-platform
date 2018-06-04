@@ -1,3 +1,5 @@
+import json
+
 from src.log import logger
 
 
@@ -6,13 +8,29 @@ def tokenize(sentence):
     return nltk.word_tokenize(sentence)
 
 
+def is_not_stop_word(word):
+    from nltk.corpus import stopwords
+    stopwords = set(stopwords.words('english'))
+    return word not in stopwords
+
+
+def is_not_sign(word):
+    return word not in '’\',.-)(!&?*;:"'
+
+
 def handle(sc):
-    words = sc.textFile('/data/file.txt') \
+    words = sc.textFile('/data/input') \
         .flatMap(tokenize)
 
-    reduced_words = words.filter(lambda w: w not in ',.-)(!&?*;:"') \
+    mapped_words = words\
+        .filter(is_not_sign) \
+        .filter(is_not_stop_word) \
         .map(lambda x: (x, 1)) \
-        .reduceByKey(lambda x, y: x + y) \
-        .sortBy(lambda x: x[1], ascending=False)
+        .persist()
 
-    logger.info(reduced_words.take(10))
+    logger.info(mapped_words.getNumPartitions())
+
+    words_count = mapped_words\
+        .reduceByKey(lambda x, y: x + y)
+
+    words_count.map(json.dumps).saveAsTextFile('/data/output')
