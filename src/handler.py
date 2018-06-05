@@ -1,5 +1,7 @@
 import json
 
+from operator import add
+from uuid import uuid4
 from src.log import logger
 
 
@@ -22,15 +24,15 @@ def handle(sc):
     words = sc.textFile('/data/input') \
         .flatMap(tokenize)
 
-    mapped_words = words\
+    mapped_words = words \
         .filter(is_not_sign) \
         .filter(is_not_stop_word) \
         .map(lambda x: (x, 1)) \
         .persist()
 
-    logger.info(mapped_words.getNumPartitions())
+    words_count = mapped_words.reduceByKey(add)
 
-    words_count = mapped_words\
-        .reduceByKey(lambda x, y: x + y)
+    path = '/data/output/{}'.format(uuid4())
+    logger.info("Dumping data to {}".format(path))
 
-    words_count.map(json.dumps).saveAsTextFile('/data/output')
+    words_count.map(json.dumps).saveAsTextFile(path)
