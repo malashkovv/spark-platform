@@ -16,10 +16,16 @@ services:
       - master
       - worker_bear
       - worker_hawk
-  shell:
+  ipython:
     extends:
       service: spark
-    command: shell
+    command: spark-ipython
+  jupyter:
+    extends:
+      service: spark
+    command: spark-jupyter
+    ports:
+      - 7000:7000
   master:
     extends:
       service: spark

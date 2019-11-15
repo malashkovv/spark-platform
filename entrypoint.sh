@@ -21,8 +21,17 @@ set_ipython() {
     fi
 }
 
-if [ $1 == 'shell' ]; then
+set_jupyter() {
+  export PYSPARK_DRIVER_PYTHON=jupyter
+  export PYSPARK_DRIVER_PYTHON_OPTS="notebook --ip 0.0.0.0 --port=7000 --allow-root"
+  export PYSPARK_PYTHON=python
+}
+
+if [ $1 == 'spark-ipython' ]; then
     set_ipython
+    exec $SPARK_HOME/bin/pyspark --master spark://${SPARK_MASTER_HOST}:${SPARK_MASTER_PORT}
+elif [ $1 == 'spark-jupyter' ]; then
+    set_jupyter
     exec $SPARK_HOME/bin/pyspark --master spark://${SPARK_MASTER_HOST}:${SPARK_MASTER_PORT}
 elif [ $1 == 'submit' ]; then
     exec $SPARK_HOME/bin/spark-submit $2

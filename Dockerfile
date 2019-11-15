@@ -1,14 +1,21 @@
-FROM python:3.5
+FROM centos:7
 
-ARG SPARK_VERSION=2.3.0
+ARG SPARK_VERSION=2.4.4
 ARG HADOOP_VERSION=2.7
 ARG JAVA_VERSION=8
+ARG PYTHON_VERSION=3.6
 
-RUN echo deb http://mirrors.digitalocean.com/debian jessie-backports main >> /etc/apt/sources.list
-RUN apt-get update -y && apt-get install -t jessie-backports openjdk-8-jre-headless ca-certificates-java wget -y
+RUN yum install -y https://centos7.iuscommunity.org/ius-release.rpm
+RUN yum update -y && yum install -y \
+                  java-1.8.0-openjdk \
+                  wget \
+                  python36u \
+                  python36u-libs \
+                  python36u-devel \
+                  python36u-pip
 
-ENV JAVA_HOME=/usr/lib/jvm/java-${JAVA_VERSION}-openjdk-amd64
-ENV PATH=$PATH:/usr/lib/jvm/java-${JAVA_VERSION}-openjdk-amd64/jre/bin:/usr/lib/jvm/java-${JAVA_VERSION}-openjdk-amd64/bin
+RUN ln -fs /usr/bin/python3.6 /usr/bin/python
+RUN ln -fs /usr/bin/pip3.6 /usr/bin/pip
 
 RUN mkdir /usr/spark/
 RUN wget -O /usr/spark/spark.tgz "https://archive.apache.org/dist/spark/spark-$SPARK_VERSION/spark-$SPARK_VERSION-bin-hadoop$HADOOP_VERSION.tgz"
@@ -22,7 +29,9 @@ RUN rm /usr/spark/spark.tgz
 WORKDIR /usr/src/app/
 
 RUN pip install --upgrade pip
-RUN pip install ipython nltk jupyter py4j pyspark==$SPARK_VERSION
+RUN pip install ipython jupyter py4j==0.10.6 pyspark==$SPARK_VERSION
+
+RUN pip install nltk
 
 RUN python -m nltk.downloader -d /usr/lib/nltk_data punkt
 RUN python -m nltk.downloader -d /usr/lib/nltk_data stopwords
@@ -36,5 +45,7 @@ COPY . .
 COPY entrypoint.sh /entrypoint.sh
 
 EXPOSE 8080 8081 7077 7078
+
+RUN python -V
 
 ENTRYPOINT ["/entrypoint.sh"]
