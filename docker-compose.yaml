@@ -26,6 +26,8 @@ services:
     command: spark-jupyter
     ports:
       - 7000:7000
+    environment:
+      - SPARK_JARS=postgresql-9.4.1207.jar
   master:
     extends:
       service: spark
@@ -37,7 +39,7 @@ services:
     extends:
       service: spark
     depends_on:
-      - master
+      - spark
     command: worker
     environment:
       - SPARK_WORKER_WEBUI_PORT=8081

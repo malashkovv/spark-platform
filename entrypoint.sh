@@ -23,7 +23,7 @@ set_ipython() {
 
 set_jupyter() {
   export PYSPARK_DRIVER_PYTHON=jupyter
-  export PYSPARK_DRIVER_PYTHON_OPTS="notebook --ip 0.0.0.0 --port=7000 --allow-root"
+  export PYSPARK_DRIVER_PYTHON_OPTS="notebook --ip='*' --NotebookApp.token='' --NotebookApp.password='' --port=7000 --allow-root"
   export PYSPARK_PYTHON=python
 }
 
