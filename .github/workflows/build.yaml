@@ -1,0 +1,14 @@
+name: Build
+on:
+  pull_request:
+    branches:
+      - '*'
+jobs:
+  build:
+    runs-on: ubuntu-18.04
+    steps:
+      - uses: actions/checkout@v1
+
+      - name: Build image
+        run: |
+          docker build -t vmalashkov/apache-spark:latest .
