@@ -6,9 +6,19 @@ on:
 jobs:
   build:
     runs-on: ubuntu-18.04
+    strategy:
+      matrix:
+        python: ["3.7.11"]
+        spark: ["2.4.5"]
+    env:
+      PYTHON_VERSION: ${{ matrix.python }}
+      SPARK_VERSION: ${{ matrix.spark }}
     steps:
       - uses: actions/checkout@v1
 
       - name: Build image
         run: |
-          docker build -t vmalashkov/apache-spark:latest .
+          docker build \
+            --build-arg SPARK_VERSION=$SPARK_VERSION \
+            --build-arg PYTHON_VERSION=$PYTHON_VERSION \
+            -t vmalashkov/apache-spark:latest .
