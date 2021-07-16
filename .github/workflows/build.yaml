@@ -1,0 +1,27 @@
+name: Build
+on:
+  pull_request:
+    branches:
+      - '*'
+jobs:
+  # TODO: Add some health check jobs
+  build:
+    runs-on: ubuntu-18.04
+    strategy:
+      # TODO: Make version values external
+      # TODO: Add Java versioning
+      matrix:
+        python: ["3.7.11"]
+        spark: ["2.4.5"]
+    env:
+      PYTHON_VERSION: ${{ matrix.python }}
+      SPARK_VERSION: ${{ matrix.spark }}
+    steps:
+      - uses: actions/checkout@v1
+
+      - name: Build image
+        run: |
+          docker build \
+            --build-arg SPARK_VERSION=$SPARK_VERSION \
+            --build-arg PYTHON_VERSION=$PYTHON_VERSION \
+            -t vmalashkov/apache-spark:spark-$SPARK_VERSION-py-$PYTHON_VERSION .
