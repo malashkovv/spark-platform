@@ -2,8 +2,8 @@ version: "2.1"
 services:
   spark:
     build:
-      dockerfile: Dockerfile
-      context: .
+      dockerfile: ../Dockerfile
+      context: ..
       args:
         - SPARK_VERSION=2.3.0
         - HADOOP_VERSION=2.7

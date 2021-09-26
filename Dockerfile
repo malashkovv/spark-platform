@@ -25,7 +25,7 @@ RUN wget -O /usr/python/python.tgz "https://www.python.org/ftp/python/$PYTHON_VE
     && make altinstall
 
 RUN mkdir /usr/spark/
-RUN wget -O /usr/spark/spark.tgz "https://archive.apache.org/dist/spark/spark-$SPARK_VERSION/spark-$SPARK_VERSION-bin-hadoop$HADOOP_VERSION.tgz" \
+RUN wget -O /usr/spark/spark.tgz "https://dlcdn.apache.org/spark/spark-$SPARK_VERSION/spark-$SPARK_VERSION-bin-hadoop$HADOOP_VERSION.tgz" \
     && tar -xf /usr/spark/spark.tgz -C /usr/spark/ \
     && rm /usr/spark/spark.tgz
 
