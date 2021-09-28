@@ -8,11 +8,16 @@ jobs:
     runs-on: ubuntu-18.04
     strategy:
       matrix:
-        python: ["3.7.11", "3.8.11"]
-        spark: ["2.4.5", "3.1.2"]
+        python: ["3.7.11", "3.8.12", "3.9.7"]
+        spark: ["2.4.8", "3.0.3", "3.1.2"]
+        hadoop: ["2.7", "3.2"]
+        exclude:
+          - spark: "2.4.8"
+            hadoop: "3.2"
     env:
       PYTHON_VERSION: ${{ matrix.python }}
       SPARK_VERSION: ${{ matrix.spark }}
+      HADOOP_VERSION: ${{ matrix.hadoop }}
     steps:
       - uses: actions/checkout@v1
 
@@ -27,8 +32,9 @@ jobs:
           docker build \
             --build-arg SPARK_VERSION=$SPARK_VERSION \
             --build-arg PYTHON_VERSION=$PYTHON_VERSION \
-            -t vmalashkov/apache-spark:spark-$SPARK_VERSION-py-$PYTHON_VERSION .
+            --build-arg HADOOP_VERSION=$HADOOP_VERSION \
+            -t vmalashkov/apache-spark:spark-$SPARK_VERSION-h${HADOOP_VERSION}-py-$PYTHON_VERSION .
 
       - name: Push image
         run: |
-          docker push vmalashkov/apache-spark:spark-$SPARK_VERSION-py-$PYTHON_VERSION
+          docker push vmalashkov/apache-spark:spark-$SPARK_VERSION-h${HADOOP_VERSION}-py-$PYTHON_VERSION
