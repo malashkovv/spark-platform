@@ -14,17 +14,13 @@ set -e
 : ${SPARK_MASTER_WEBUI_PORT:="8080"}
 
 set_ipython() {
-    if [[ $SPARK_VERSION == *"2."* ]] ; then
-        export PYSPARK_DRIVER_PYTHON=ipython
-    else
-        export IPYTHON=1
-    fi
+    export PYSPARK_DRIVER_PYTHON=ipython
 }
 
 set_jupyter() {
   export PYSPARK_DRIVER_PYTHON=jupyter
   export PYSPARK_DRIVER_PYTHON_OPTS="notebook --ip='*' --NotebookApp.token='' --NotebookApp.password='' --port=7000 --allow-root"
-  export PYSPARK_PYTHON=python
+  export PYSPARK_PYTHON=/usr/bin/spark-python
 }
 
 if [ $1 == 'spark-ipython' ]; then
