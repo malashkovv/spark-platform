@@ -2,11 +2,12 @@ version: "2.1"
 services:
   spark:
     build:
-      dockerfile: ../Dockerfile
+      dockerfile: Dockerfile
       context: ..
       args:
-        - SPARK_VERSION=2.3.0
-        - HADOOP_VERSION=2.7
+        - PYTHON_VERSION=3.8.12
+        - SPARK_VERSION=3.1.2
+        - HADOOP_VERSION=3.2
     volumes:
       - ./data:/data
   driver:
