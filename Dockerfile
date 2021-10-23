@@ -1,8 +1,9 @@
 FROM centos:8
 
+# User Spark version above 2.x
 ARG SPARK_VERSION=3.1.2
-ARG HADOOP_VERSION=2.7
-ARG PYTHON_VERSION=3.7.0
+ARG HADOOP_VERSION=3.2
+ARG PYTHON_VERSION=3.7.12
 
 RUN yum install -y java-1.8.0-openjdk
 
@@ -30,10 +31,8 @@ RUN export PYTHON_MAJOR_VERSION=$(cut -d '.' -f-2 <<< $PYTHON_VERSION) \
 
 ENV SPARK_HOME="/usr/spark/spark-${SPARK_VERSION}-bin-hadoop${HADOOP_VERSION}"
 
-# TODO: versions
-RUN spark-pip install ipython jupyter numpy
-
-#ENV PYTHONPATH="${SPARK_HOME}/python/lib:${SPARK_HOME}/python:${SPARK_HOME}/python/build"
+# TODO: pin versions?
+RUN spark-pip install ipython jupyter numpy pyspark==${SPARK_VERSION}
 
 ENV SPARK_VERSION=$SPARK_VERSION
 
