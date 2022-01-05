@@ -2,6 +2,8 @@
 
 set -e
 
+: ${MODE:="LOCAL"}
+
 : ${SPARK_WORKER_PORT:="7078"}
 
 : ${SPARK_MASTER_PORT:="7077"}
@@ -24,15 +26,27 @@ set_jupyter() {
   export PYSPARK_DRIVER_PYTHON_OPTS="notebook --ip='*' --NotebookApp.token='' --NotebookApp.password='' --port=7000 --allow-root"
 }
 
+set_master_uri() {
+  if [ ${MODE} == 'LOCAL' ]; then
+    export MASTER_URI="local[*]"
+  else
+    export MASTER_URI="spark://${SPARK_MASTER_HOST}:${SPARK_MASTER_PORT}"
+  fi
+}
+
+run() {
+  set_master_uri
+  exec $SPARK_HOME/bin/$1 --master $MASTER_URI
+}
+
 if [ $1 == 'spark-ipython' ]; then
     set_ipython
-    exec $SPARK_HOME/bin/pyspark --master spark://${SPARK_MASTER_HOST}:${SPARK_MASTER_PORT}
+    run pyspark
 elif [ $1 == 'spark-jupyter' ]; then
     set_jupyter
-    exec $SPARK_HOME/bin/pyspark --master spark://${SPARK_MASTER_HOST}:${SPARK_MASTER_PORT}
+    run pyspark
 elif [ $1 == 'spark-sql' ]; then
-    set_jupyter
-    exec $SPARK_HOME/bin/spark-sql --master spark://${SPARK_MASTER_HOST}:${SPARK_MASTER_PORT}
+    run spark-sql
 elif [ $1 == 'submit' ]; then
     exec $SPARK_HOME/bin/spark-submit $2
 elif [ $1 == 'worker' ]; then
