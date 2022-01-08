@@ -8,8 +8,8 @@ jobs:
     runs-on: ubuntu-18.04
     strategy:
       matrix:
-        python: ["3.7.11", "3.8.12", "3.9.7"]
-        spark: ["2.4.8", "3.0.3", "3.1.2"]
+        python: ["3.7.12", "3.8.12"]
+        spark: ["2.4.8", "3.1.2"]
         hadoop: ["2.7", "3.2"]
         exclude:
           - spark: "2.4.8"

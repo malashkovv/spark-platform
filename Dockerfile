@@ -9,7 +9,7 @@ RUN yum install -y java-1.8.0-openjdk
 
 RUN yum -y groupinstall "Development Tools" \
     && yum install -y gcc zlib-devel bzip2 bzip2-devel readline-devel sqlite \
-                      sqlite-devel openssl-devel xz xz-devel libffi-devel \
+                      sqlite-devel openssl-devel xz xz-devel libffi-devel maven \
     && yum install -y wget
 
 RUN mkdir /usr/python/
@@ -31,12 +31,21 @@ RUN export PYTHON_MAJOR_VERSION=$(cut -d '.' -f-2 <<< $PYTHON_VERSION) \
 
 ENV SPARK_HOME="/usr/spark/spark-${SPARK_VERSION}-bin-hadoop${HADOOP_VERSION}"
 
+COPY ./pom.xml.template ./pom.xml.template
+
+RUN export HADOOP_VERSION=${HADOOP_VERSION}.0 \
+    && cat pom.xml.template | envsubst > pom.xml \
+    && rm pom.xml.template \
+    && mvn -DoutputDirectory=$SPARK_HOME/jars/ dependency:copy-dependencies
+
 # TODO: pin versions?
 RUN spark-pip install ipython jupyter numpy pyspark==${SPARK_VERSION}
 
+COPY entrypoint.sh /entrypoint.sh
+
 ENV SPARK_VERSION=$SPARK_VERSION
 
-COPY entrypoint.sh /entrypoint.sh
+# TODO: Add spark user instead of root
 
 EXPOSE 8080 8081 7077 7078 7000
 
