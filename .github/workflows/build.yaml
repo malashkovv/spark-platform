@@ -9,9 +9,8 @@ jobs:
     runs-on: ubuntu-18.04
     strategy:
       # TODO: Make version values external
-      # TODO: Add Java versioning
       matrix:
-        python: ["3.9.7"]
+        python: ["3.8.12"]
         spark: ["2.4.8", "3.1.2"]
         hadoop: ["2.7", "3.2"]
         exclude:
