@@ -10,6 +10,11 @@
             <artifactId>hadoop-aws</artifactId>
             <version>${HADOOP_VERSION}</version>
         </dependency>
+        <dependency>
+            <groupId>io.delta</groupId>
+            <artifactId>delta-core_2.12</artifactId>
+            <version>1.0.0</version>
+        </dependency>
     </dependencies>
     <build>
         <plugins>
