@@ -1,0 +1,9 @@
+SPARK_VERSION=3.2.1
+PYTHON_VERSION=3.9.12
+HADOOP_VERSION=3.2
+
+docker build \
+  --build-arg SPARK_VERSION=$SPARK_VERSION \
+  --build-arg PYTHON_VERSION=$PYTHON_VERSION \
+  --build-arg HADOOP_VERSION=$HADOOP_VERSION \
+  -t vmalashkov/apache-spark:spark-$SPARK_VERSION-h${HADOOP_VERSION}-py-$PYTHON_VERSION .

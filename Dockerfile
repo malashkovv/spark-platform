@@ -1,16 +1,17 @@
-FROM centos:8
+FROM ubuntu:22.04
 
 # User Spark version above 2.x
 ARG SPARK_VERSION=3.1.2
 ARG HADOOP_VERSION=3.2
 ARG PYTHON_VERSION=3.7.12
 
-RUN yum install -y java-1.8.0-openjdk
+SHELL ["/bin/bash", "-c"]
 
-RUN yum -y groupinstall "Development Tools" \
-    && yum install -y gcc zlib-devel bzip2 bzip2-devel readline-devel sqlite \
-                      sqlite-devel openssl-devel xz xz-devel libffi-devel maven \
-    && yum install -y wget
+RUN apt-get update  \
+    && apt-get install -y openjdk-8-jdk wget maven gettext-base \
+    && apt-get install -y python3-distutils python3-testresources \
+    && apt-get install -y build-essential zlib1g-dev libncurses5-dev libgdbm-dev libnss3-dev  \
+      libssl-dev libreadline-dev libffi-dev libsqlite3-dev libbz2-dev
 
 RUN mkdir /usr/python/
 RUN wget -O /usr/python/python.tgz "https://www.python.org/ftp/python/$PYTHON_VERSION/Python-$PYTHON_VERSION.tgz" \
@@ -33,7 +34,7 @@ ENV SPARK_HOME="/usr/spark/spark-${SPARK_VERSION}-bin-hadoop${HADOOP_VERSION}"
 
 COPY ./pom.xml.template ./pom.xml.template
 
-RUN export HADOOP_VERSION=${HADOOP_VERSION}.0 \
+RUN export HADOOP_VERSION=${HADOOP_VERSION}.3 \
     && cat pom.xml.template | envsubst > pom.xml \
     && rm pom.xml.template \
     && mvn -DoutputDirectory=$SPARK_HOME/jars/ dependency:copy-dependencies
